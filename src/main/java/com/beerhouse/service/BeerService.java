@@ -1,6 +1,6 @@
 package com.beerhouse.service;
 
-import com.beerhouse.BeerRepository;
+import com.beerhouse.repository.BeerRepository;
 import com.beerhouse.model.Beer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
