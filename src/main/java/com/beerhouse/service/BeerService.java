@@ -1,7 +1,7 @@
 package com.beerhouse.service;
 
-import com.beerhouse.repository.BeerRepository;
 import com.beerhouse.model.Beer;
+import com.beerhouse.repository.BeerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +35,18 @@ public class BeerService {
 
         repository.deleteById(id);
         return true;
+    }
+
+    public boolean update(Beer beer) {
+        if (findById(beer.getId()) == null) {
+            return false;
+        }
+
+        repository.save(beer);
+        return true;
+    }
+
+    public void partialUpdate(Beer beer) {
+        repository.save(beer);
     }
 }
