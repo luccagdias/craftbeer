@@ -2,6 +2,7 @@ package com.beerhouse.controller;
 
 import com.beerhouse.model.Beer;
 import com.beerhouse.service.BeerService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,5 +32,11 @@ public class BeerController {
     public ResponseEntity<String> insertBeer(@RequestBody Beer beer) {
         service.insert(beer);
         return ResponseEntity.ok().build();
+    }
+    
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity deleteBeer(@PathVariable Long id) {
+        boolean deleted = service.delete(id);
+        return (deleted) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }

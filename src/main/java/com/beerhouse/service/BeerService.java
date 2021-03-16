@@ -27,4 +27,13 @@ public class BeerService {
     public Beer insert(Beer beer) {
         return repository.save(beer);
     }
+
+    public boolean delete(Long id) {
+        if (findById(id) == null) {
+            return false;
+        }
+
+        repository.deleteById(id);
+        return true;
+    }
 }
