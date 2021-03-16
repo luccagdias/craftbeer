@@ -4,10 +4,7 @@ import com.beerhouse.model.Beer;
 import com.beerhouse.service.BeerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +25,11 @@ public class BeerController {
     public ResponseEntity<List<Beer>> getAllBeers() {
         List<Beer> beers = service.findAll();
         return ResponseEntity.ok().body(beers);
+    }
+
+    @PostMapping
+    public ResponseEntity<String> insertBeer(@RequestBody Beer beer) {
+        service.insert(beer);
+        return ResponseEntity.ok().build();
     }
 }

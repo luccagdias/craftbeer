@@ -23,4 +23,8 @@ public class BeerService {
     public List<Beer> findAll() {
         return repository.findAll();
     }
+
+    public Beer insert(Beer beer) {
+        return repository.save(beer);
+    }
 }
