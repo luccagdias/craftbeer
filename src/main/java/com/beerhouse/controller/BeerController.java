@@ -38,8 +38,7 @@ public class BeerController {
         Beer insertedBeer = service.insert(beer);
 
         URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
+                .fromPath("beers/{id}")
                 .buildAndExpand(insertedBeer.getId())
                 .toUri();
 
