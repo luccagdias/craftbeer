@@ -2,13 +2,15 @@ package com.beerhouse.controller;
 
 import com.beerhouse.model.Beer;
 import com.beerhouse.service.BeerService;
-import com.sun.el.util.ReflectionUtil;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -31,10 +33,20 @@ public class BeerController {
         return ResponseEntity.ok().body(beers);
     }
 
-    @PostMapping
+    @PostMapping(produces = "application/json")
     public ResponseEntity<String> insertBeer(@RequestBody Beer beer) {
-        service.insert(beer);
-        return ResponseEntity.ok().build();
+        Beer insertedBeer = service.insert(beer);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(insertedBeer.getId())
+                .toUri();
+
+        JSONObject location = new JSONObject();
+        location.put("location", uri);
+
+        return ResponseEntity.created(uri).body(location.toString());
     }
 
     @DeleteMapping(value = "/{id}")
@@ -48,7 +60,7 @@ public class BeerController {
         beer.setId(id);
 
         boolean updated = service.update(beer);
-        return (updated) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        return (updated) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
     @PatchMapping(value = "/{id}")
@@ -65,6 +77,6 @@ public class BeerController {
         });
 
         service.partialUpdate(beer);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
