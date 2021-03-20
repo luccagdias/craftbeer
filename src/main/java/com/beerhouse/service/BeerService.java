@@ -37,16 +37,11 @@ public class BeerService {
         return true;
     }
 
-    public boolean update(Beer beer) {
-        if (findById(beer.getId()) == null) {
-            return false;
-        }
-
-        repository.save(beer);
-        return true;
+    public Beer update(Beer beer) {
+        return repository.save(beer);
     }
 
-    public void partialUpdate(Beer beer) {
-        repository.save(beer);
+    public Beer partialUpdate(Beer beer) {
+        return repository.save(beer);
     }
 }
