@@ -16,6 +16,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -74,14 +75,24 @@ public class BeerControllerTest {
                 .content(new ObjectMapper().writeValueAsString(beerMock))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.location").value("http://localhost/beers/1"));
+                .andExpect(jsonPath("$.location").value("/beers/1"));
+    }
+
+    @Test
+    public void testAlterBeer() throws Exception {
+        Beer beerMock = new Beer(1L, "Beer Name", "Beer Ingredients", "Alcohol Content", 0.0, "Category");
+
+        when(beerService.update(any(Beer.class))).thenReturn(beerMock);
+
+        mockMvc.perform(put("/beers/1")
+                .content(new ObjectMapper().writeValueAsString(beerMock))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void testDeleteBeer() throws Exception {
-        Beer beerMock = new Beer(1L, "Beer Name", "Beer Ingredients", "Alcohol Content", 0.0, "Category");
-
-        when(beerService.delete(anyLong())).thenReturn(true);
+        doNothing().when(beerService).delete(anyLong());
 
         mockMvc.perform(delete("/beers/1"))
                 .andExpect(status().isNoContent());

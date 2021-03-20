@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -15,14 +17,19 @@ public class Beer implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name is required!")
     private String name;
 
+    @NotBlank(message = "Ingredients is required!")
     private String ingredients;
 
+    @NotBlank(message = "Alcohol Content is required!")
     private String alcoholContent;
 
+    @NotNull(message = "Price is required!")
     private Double price;
 
+    @NotBlank(message = "Category is required!")
     private String category;
 
     public Beer() {

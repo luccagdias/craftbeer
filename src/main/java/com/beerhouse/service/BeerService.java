@@ -2,6 +2,7 @@ package com.beerhouse.service;
 
 import com.beerhouse.model.Beer;
 import com.beerhouse.repository.BeerRepository;
+import com.beerhouse.service.exception.BeerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,8 @@ public class BeerService {
     public Beer findById(Long id) {
         Optional<Beer> beer = repository.findById(id);
 
-        return beer.orElse(null);
+        return beer.orElseThrow(() ->
+                new BeerNotFoundException("Não foram encontrados dados para o Id indicado"));
     }
 
     public List<Beer> findAll() {
@@ -28,20 +30,21 @@ public class BeerService {
         return repository.save(beer);
     }
 
-    public boolean delete(Long id) {
-        if (findById(id) == null) {
-            return false;
-        }
+    public void delete(Long id) {
+        findById(id);
 
         repository.deleteById(id);
-        return true;
     }
 
     public Beer update(Beer beer) {
+        findById(beer.getId());
+
         return repository.save(beer);
     }
 
     public Beer partialUpdate(Beer beer) {
+        findById(beer.getId());
+
         return repository.save(beer);
     }
 }

@@ -5,14 +5,12 @@ import com.beerhouse.service.BeerService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.lang.reflect.Field;
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/beers")
@@ -34,11 +32,11 @@ public class BeerController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<String> insertBeer(@RequestBody Beer beer) {
+    public ResponseEntity<String> insertBeer(@RequestBody @Valid Beer beer) {
         Beer insertedBeer = service.insert(beer);
 
         URI uri = ServletUriComponentsBuilder
-                .fromPath("beers/{id}")
+                .fromPath("/beers/{id}")
                 .buildAndExpand(insertedBeer.getId())
                 .toUri();
 
@@ -50,32 +48,23 @@ public class BeerController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity deleteBeer(@PathVariable Long id) {
-        boolean deleted = service.delete(id);
-        return (deleted) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity alterBeer(@PathVariable Long id, @RequestBody Beer beer) {
+    public ResponseEntity alterBeer(@PathVariable Long id, @RequestBody @Valid Beer beer) {
         beer.setId(id);
 
-        boolean updated = service.update(beer);
-        return (updated) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+        service.update(beer);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity partialAlterBeer(@PathVariable Long id, @RequestBody Map<Object, Object> beerFields) {
-        Beer beer = service.findById(id);
-        if (beer == null) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity partialAlterBeer(@PathVariable Long id, @RequestBody @Valid Beer beer) {
+        beer.setId(id);
 
-        beerFields.forEach((fieldName, fieldValue) -> {
-            Field field = ReflectionUtils.findField(Beer.class, (String) fieldName);
-            field.setAccessible(true);
-            ReflectionUtils.setField(field, beer, fieldValue);
-        });
-
-        service.partialUpdate(beer);
+        service.update(beer);
         return ResponseEntity.ok().build();
     }
 }
