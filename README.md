@@ -89,6 +89,36 @@ Dica: Copie e cole o conteúdo do arquivo acima no [Swagger Editor](https://edit
 
 ## Seção reservada para que você descreva brevemente como executar o seu projeto
 
-Pode ser algo simples, como executar o arquivo Application.java. Ou talvez tenha alguma dependência como base de dados, por exemplo.
+Para executar o projeto é necessário clonar o repositório:
 
-TODO
+```bash
+    $ git clone https://github.com/luccagdias/craftbeer.git
+```
+
+Com o repositório clonado, o projeto pode ser executado de duas formas:
+
+1. Executar o arquivo ```Application.java``` que se encontra no diretório ```src/main/java```, no pacote ```com.beerhouse```
+2. Através da criação de uma imagem Docker, executando os seguintes comandos na raiz do projeto:
+
+    
+    Criação do .jar
+    ```
+        mvn clean package spring-boot:repackage
+    ```
+    
+    
+    Criação da imagem Docker
+    ```
+        sudo docker build -t craftbeer .
+    ```
+    
+
+    Executar a imagem em um container:
+    ```
+        sudo docker run -p 9000:9000 craftbeer
+    ```
+    
+
+A aplicação estará disponível no endereço ```http://localhost:9000```.
+
+A coleção do Postman para requisições aos endpoints está na pasta ```docs```.
